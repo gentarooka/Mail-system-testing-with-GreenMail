@@ -14,21 +14,29 @@ import javax.mail.Store;
 import javax.mail.URLName;
 
 /**
- * Hello world!
- * 
+ * Pop3Client
  */
 public class Pop3Client {
 
 	private Store store = null;
 	private Folder folder = null;
+	
+	private boolean isSecure = false;
+	
+	protected void setSecure(boolean secure) {
+		isSecure = secure;
+	}
 
 	public void connect(String host, int port, String user, String password) throws IOException {
 		String protocol = "pop3";
 		URLName urln = new URLName(protocol, host, port, null, user, password);
 
 		Properties props = new Properties();
-//		props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-//		props.setProperty("mail.pop3.socketFactory.fallback", "false");
+		
+		if (isSecure) {
+			props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.setProperty("mail.pop3.socketFactory.fallback", "false");
+		}
 
 		Session session = Session.getDefaultInstance(props, null);
 
