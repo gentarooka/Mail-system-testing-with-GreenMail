@@ -56,7 +56,7 @@ public class Pop3Client {
 	public List<Message> getMails() throws IOException {
 		Message[] messages;
 		try {
-			// メッセージを取得
+			// receive messages
 			messages = folder.getMessages();
 		} catch (MessagingException e) {
 			throw new IOException(e);
