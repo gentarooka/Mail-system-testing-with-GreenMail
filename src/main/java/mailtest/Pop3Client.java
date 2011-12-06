@@ -32,6 +32,7 @@ public class Pop3Client {
 		URLName urln = new URLName(protocol, host, port, null, user, password);
 
 		Properties props = new Properties();
+		props.setProperty("mail.pop3.connectiontimeout", "5000");
 		
 		if (isSecure) {
 			props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");

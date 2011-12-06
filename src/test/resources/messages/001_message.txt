@@ -1,0 +1,13 @@
+Date: Tue, 06 Dec 2011 11:30:49 +0900
+From: gensan-from@localhost
+MIME-Version: 1.0
+To: gensan@localhost
+Subject: TestMail
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+Status: U
+
+Hello World!!
+
+Test Mail
+
