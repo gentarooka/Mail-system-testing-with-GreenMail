@@ -39,7 +39,7 @@ public class Pop3Client {
 			props.setProperty("mail.pop3.socketFactory.fallback", "false");
 		}
 
-		Session session = Session.getInstance(props, null);
+		Session session = Session.getInstance(props);
 
 		try {
 			store = session.getStore(urln);
