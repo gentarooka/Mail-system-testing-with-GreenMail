@@ -29,28 +29,18 @@ import com.icegreen.greenmail.util.ServerSetupTest;
  * Unit test for simple App.
  */
 public class Pop3ClientTest {
-	private static GreenMail server;
+	private GreenMail server;
 	
 	private InputStream mailStream = null;
 
-	@BeforeClass
-	public static void setUpClass() {
+	@Before
+	public void setUp() {
 		Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
 
-		server = new GreenMail(new ServerSetup[] { ServerSetupTest.POP3S });
+		server = new GreenMail(new ServerSetup[] { ServerSetupTest.POP3S,ServerSetupTest.POP3 });
 		server.start();
 	}
 
-	@AfterClass
-	public static void tearDownClass() {
-		server.stop();
-	}
-	
-	@Before
-	public void setUp() {
-		// do nothing
-	}
-	
 	@After
 	public void tearDown() {
 		if (mailStream != null) {
@@ -61,6 +51,8 @@ public class Pop3ClientTest {
 				e.printStackTrace();
 			}
 		}
+		
+		server.stop();
 	}
 	
 	private MimeMessage createMimeMessage(String resourceName) throws MessagingException {
@@ -79,12 +71,34 @@ public class Pop3ClientTest {
 		user.deliver(message);
 
 		Pop3Client client = new Pop3Client();
+
+		try {
+			client.connect("localhost", ServerSetupTest.POP3.getPort(), user.getLogin(), user.getPassword());
+
+			List<Message> messages = client.getMails();
+
+			assertThat(messages.size(), is(1));
+		} finally {
+			client.close();
+		}
+
+	}
+	
+	@Test
+	public void getMailsSecure() throws IOException, MessagingException, UserException {
+		// create user
+		GreenMailUser user = server.setUser("gensan@localhost", "gensan", "mypassword");
+		
+		MimeMessage message = createMimeMessage("/messages/001_message.txt");
+
+		user.deliver(message);
+
+		Pop3Client client = new Pop3Client();
 		client.setSecure(true);
 
 		try {
-			client.connect("localhost", ServerSetupTest.POP3S.getPort(), "gensan", "mypassword");
+			client.connect("localhost", ServerSetupTest.POP3S.getPort(), user.getLogin(), user.getPassword());
 
-			System.out.println("connected");
 			List<Message> messages = client.getMails();
 
 			assertThat(messages.size(), is(1));

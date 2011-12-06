@@ -39,7 +39,7 @@ public class Pop3Client {
 			props.setProperty("mail.pop3.socketFactory.fallback", "false");
 		}
 
-		Session session = Session.getDefaultInstance(props, null);
+		Session session = Session.getInstance(props, null);
 
 		try {
 			store = session.getStore(urln);
@@ -81,7 +81,7 @@ public class Pop3Client {
 			try {
 				store.close();
 			} catch (MessagingException e) {
-				if (fail != null) {
+				if (fail == null) {
 					fail = e;
 				} else {
 					e.printStackTrace();
